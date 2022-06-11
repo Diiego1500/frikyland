@@ -3,7 +3,31 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-    <div class="container my-4">
-        {{form(registration_form)}}
+    <div class="container bg-white my-4 p-3">
+        <h2 class="my-3">Registrate, nerd!</h2>
+        {{form_start(registration_form)}}
+        <div class="row">
+            <div class="col-md-12 my-2">
+                {{form_label(registration_form.email, 'Correo electrónico*')}}
+                {{form_widget(registration_form.email, {attr:{'placeholder':'friky@example.com'}})}}
+            </div>
+            <div class="col-md-12 my-2">
+                {{form_label(registration_form.password, 'Password*')}}
+                {{form_widget(registration_form.password, {attr:{'placeholder':'Ingresa aquí tu contraseña'}})}}
+            </div>
+            <div class="col-md-12 my-2">
+                {{form_label(registration_form.photo, 'Foto')}}
+                {{form_widget(registration_form.photo)}}
+            </div>
+            <div class="col-md-12 my-2">
+                {{form_label(registration_form.description, 'Descripción')}}
+                {{form_widget(registration_form.description, {attr:{'placeholder':'Cuentanos sobre ti'}})}}
+            </div>
+            <div class="col-md-12 my-2">
+                {{form_widget(registration_form.Submit, {attr:{'class':'btn btn-success btn-block'}})}}
+            </div>
+        </div>
+        {{form_end(registration_form)}}
+        <a href="{{path('login')}}" class="btn btn-info btn-block my-3"> Login</a>
     </div>
 {% endblock %}

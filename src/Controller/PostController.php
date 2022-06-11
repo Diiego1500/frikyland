@@ -67,7 +67,7 @@ class PostController extends AbstractController
             $post->setUser($user);
             $this->em->persist($post);
             $this->em->flush();
-            return $this->redirectToRoute('app_post');
+            return $this->redirectToRoute('index');
         }
 
         return $this->render('post/index.html.twig', [
