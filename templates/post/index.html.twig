@@ -107,7 +107,10 @@
                     {% else %}
                         <div class="alert alert-warning"><Strong>NO hay ningún post, sé el primero!</Strong></div>
                     {% endfor %}
-
+                    {# display navigation #}
+                    <div class="navigation">
+                        {{ knp_pagination_render(posts) }}
+                    </div>
                     {#                    <div class="navigation">#}
                     {#                        {{ knp_pagination_render(posts, 'custom/custom_pagination.html.twig') }}#}
                     {#                        #}{#                        {{ knp_pagination_render(posts) }}#}
