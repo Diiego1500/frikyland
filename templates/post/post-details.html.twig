@@ -1,7 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PostController!{% endblock %}
+{% block title %}{{ parent() }} - {{ post.title }}{% endblock %}
 
 {% block body %}
-    {{dump(post)}}
+    {{ parent() }}
+    <div class="container my-2  bg-white">
+        <h5 class="py-3"><a href="{{ path('index') }}"><i class="fa-solid fa-arrow-left-long"></i> Regresar</a></h5>
+        <!--    ocultar en sm-->
+        <div class="d-none  d-md-block bg-white p-3">
+            <div class="text-left mx-3">
+                <h1> {{ post.title }}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        |
+                        <button class="add_favorite"
+                                style="background-color: transparent; border: 1px solid transparent">
+                                                    <span style="color: orange"><i class="fa-solid fa-star"
+                                                                                   id="{{ post.id }}"></i></span>
+                        </button>
+                    {% endif %}
+
+                    {% if app.user == post.user %}
+                        <a href="{{ path('postEdit', {id:post.id}) }}">
+                            <small style="color: orange"><i class="fa-solid fa-pen"></i></small>
+                        </a>
+
+                        <button id="delete" style="background-color: transparent; border: 1px solid transparent"
+                                data-id="{{ post.id }}">
+                            <span style=" color: red"><i id="{{ post.id }}" class="fa-solid fa-trash-can"></i></span>
+                        </button>
+                    {% endif %}
+                </h1>
+                {#                <p> Por <a href="{{path('app_user', {id:post.user.id})}}">{{ post.user.username }}</a> el {{ post.creationdate | date }}</p>#}
+                <p>Fecha de Publicación: {{ post.creationdate | date }}</p>
+                <div class="my-2">
+                    <span class="alert-success py-1 px-5"> {{ post.type }}</span>
+                </div>
+            </div>
+            <div class="text-center my-4">
+                {% if post.file != null %}
+                    <img class="w-25" src="{{ asset('uploads/files/' ~ post.file) }}">
+                {% endif %}
+            </div>
+            <div class="text-justify">
+                {{ post.description | raw }}
+            </div>
+        </div>
+        <!--    ocultar en MD-->
+        <div class="d-block d-sm-block d-md-none  my-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="p-2 border bg-white">
+                        <div class="text-left">
+                            <h1> {{ post.title }}
+                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                    |
+                                    <button class="add_favorite"
+                                            style="background-color: transparent; border: 1px solid transparent">
+                                                    <span style="color: orange"><i class="fa-solid fa-star"
+                                                                                   id="{{ post.id }}"></i></span>
+                                    </button>
+                                {% endif %}
+                                {% if app.user == post.user %}
+                                    <a href="{{ path('postEdit', {id:post.id}) }}">
+                                        <small style="color: orange"><i class="fa-solid fa-pen"></i></small>
+                                    </a>
+                                    <button id="delete-sm"
+                                            style="background-color: transparent; border: 1px solid transparent"
+                                            data-id="{{ post.id }}">
+                                        <span style=" color: red"><i class="fa-solid fa-trash-can"></i></span>
+                                    </button>
+                                {% endif %}
+                            </h1>
+                            {#                            <p>Por <a href="{{path('app_user', {id:post.user.id})}}">{{ post.user.username }}</a> el {{ post.creationdate | date }}</p>#}
+                            <p>Fecha de publicación: {{ post.creationdate | date }}</p>
+                            <div class="mb-4">
+                                <span class="alert-success py-1 px-5"> {{ post.type }}</span>
+                            </div>
+                        </div>
+                        {% if post.file != null %}
+                            <img src=" {{ asset('uploads/files/' ~ post.file ) }} " width="100%" style="clear: both">
+                        {% endif %}
+
+                        <div class="w-100 text-justify">
+                            {{ post.description | raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <div class="p-3 bg-white border rounded my-4">
+                        {{ form(interaction_form) }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-dark my-4 border">Si deseas comentar, por favor <a href="{{ path('userRegistration')}}">Registrate</a> o
+                        <a href="{{path('login')}}">inicia sesión</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/sweetalert2.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script>
+        $('.custom-file-input').on('change', function (event) {
+            var inputFile = event.currentTarget;
+            $(inputFile).parent()
+                .find('.custom-file-label')
+                .html(inputFile.files[0].name);
+        });
+    </script>
 {% endblock %}

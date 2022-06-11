@@ -1,19 +1,83 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-{#            {{ encore_entry_link_tags('app') }} #}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}¡Frikyland!{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon.png') }}">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+        <script async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1344652070596566"></script>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{path('index')}}"><img src="{{ asset('img/6392506.png') }}" alt="logo"
+                                                  width="50"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        {% block javascripts %}
-{#            {{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fa-solid fa-microphone"></i>
+
+                            Podcast </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav my-lg-0">
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a href="{{ path('app_user', {id: app.user.id}) }}" class="dropdown-item">
+                                    Perfil
+                                </a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </a>
+                            </div>
+
+                        </li>
+
+                    {% else %}
+                        <li>
+                            <a class="nav-link" href="{{path('userRegistration')}}">
+                                <i class="fa-solid fa-user-plus"></i> Registrate
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('login')}}">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="https://kit.fontawesome.com/f6edb77282.js" crossorigin="anonymous"></script>
+{% endblock %}
+</body>
 </html>

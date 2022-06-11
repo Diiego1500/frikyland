@@ -1,21 +1,165 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PostController!{% endblock %}
+{% block title %}{{ parent() }} - Home{% endblock %}
 
 {% block body %}
-    {{ form(form) }}
-    <table>
-        {% for post in posts %}
-            <tr>
-                <td>
-                    <a href="{{path('postDetails', {id:post.id})}}">Descripcion</a>
-                </td>
-                <td>{{post.id}}</td>
-                <td>{{post.title}}</td>
-                <td>{{post.description}}</td>
-                <td>{{post.file}}</td>
-                <td>{{post.creation_date | date}}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    {{ parent() }}
+    <div class="container my-2">
+        {% if app.user %}
+            <h4 class="my-3 alert alert-warning border">🤓 Bienvenido a Frikyland, <i>{{app.user.username | capitalize}}</i> </h4>
+        {%endif%}
+        <div class="row">
+            <div class="col-md-8 my-2">
+                <div class="p-2 border bg-white">
+                    <div id="accordion" class="p-1 my-2">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne">
+                                        Publica algo nuevo
+                                    </button>
+                                </h5>
+                            </div>
+                            <!--                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="background-color: #EFFFFD">-->
+
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                     data-parent="#accordion"
+                                     style="background-color: #DAF1F9">
+                                    {{ form_start(form) }}
+                                    <div class="row p-2">
+                                        <div class="col-md-6 my-2">
+                                            {{ form_widget(form.title, {attr:{'placeholder':'Titulo', 'class':'form-control'}}) }}
+                                        </div>
+                                        <div class="col-md-6 my-2">
+                                            {{ form_widget(form.type, {attr:{'class':'form-control'}}) }}
+                                        </div>
+                                        <div class="col-md-12 my-2">
+                                            {{ form_widget(form.description, {attr:{'class':'form-control', 'placeholder': '¿Qué quieres contar?'}}) }}
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            {{ form_widget(form.file, {attr:{'class':'form-control my-2'}}) }}
+                                            {{ form_widget(form.Guardar, {attr:{'class':'my-2 btn btn-success', 'value':'Guardar'}}) }}
+                                        </div>
+
+                                    </div>
+                                    {{ form_end(form) }}
+
+                                </div>
+                            {% else %}
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                     data-parent="#accordion">
+                                    <div class="alert alert-dark my-4 border m-3">
+                                        Si deseas publicar, por favor <a
+                                                href="#">Registrate</a> o
+                                        <a href="#">inicia sesión</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+
+                    {% for post in posts %}
+                        {% if post.file == null %}
+                            {% set  first_row = 'col-md-12' %}
+                            {% set second_row = 'd-none' %}
+                        {% else %}
+                            {% set  first_row = 'col-md-9' %}
+                            {% set  second_row = 'col-md-3' %}
+                        {% endif %}
+                        <div class="container">
+                            <div class="row border custom-shadow">
+                                <div class=" {{ first_row }}">
+                                    <div class=" my-2 px-1 py-2">
+
+                                        <h4>
+                                            <a href="{{ path('postDetails', {id: post.id, url: post.url}) }}">
+                                                {{ post.title }}
+                                            </a>
+                                        </h4>
+
+                                        {#                                        <p>Por <a href="{{path('app_user', {id:post.user_id})}}">{{ post.user_username }}</a> el {{ post.creationdate | date }}</p>#}
+                                        <p>Fecha de publicación: {{ post.creation_date | date }}</p>
+                                        <div class="my-2">
+                                            {#                                            <span class="alert-success py-1 px-5">{{ post.type }}</span>#}
+                                        </div>
+                                        <div>
+                                            {#                                            {{ post.description }}#}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="{{ second_row }} my-auto">
+                                    {% if post.file != null %}
+                                        <img src="{{ asset('uploads/files/' ~ post.file) }}" alt="Not found"
+                                             width="100%">
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr>
+                    {% else %}
+                        <div class="alert alert-warning"><Strong>NO hay ningún post, sé el primero!</Strong></div>
+                    {% endfor %}
+
+                    {#                    <div class="navigation">#}
+                    {#                        {{ knp_pagination_render(posts, 'custom/custom_pagination.html.twig') }}#}
+                    {#                        #}{#                        {{ knp_pagination_render(posts) }}#}
+                    {#                    </div>#}
+                </div>
+            </div>
+            <div class="col-md-4 my-2">
+                <div class="p-1 border bg-white">
+                    <div class="my-2 border px-1 py-2 alert alert-info">
+                        <h5 class="my-3 text-center">⚠️ Importante:</h5>
+                        <ul>
+                            <li>🙏 No hackees mi sitio porfi</li>
+                            <li>🤝 Sé respetuoso</li>
+                            <li>🤓 Aporta contenido Friki, nerd</li>
+                            <li>☝️ Sólo 1 comentario por POST</li>
+                            <li>🧑‍💻 Puedes usar HTML en los comentarios y publicaciones (Somos frikis despues de todo)</li>
+                            <li>👩‍💻 En ese sitio usamos Bootstrap 4 (Para que estilices esos POSTS)</li>
+                            <li>🕵️ Tu contraseña está encriptada, (Ni yo puedo verla, por desgracia)</li>
+                            <li>🎙 El podcast, libro, tutoriales, se subirán poco a poco</li>
+                            <li>💰 Necesito comer, hay (o habrá) anuncios.</li>
+                        </ul>
+
+                    </div>
+                    <div class="my-2 border px-1 py-2 alert alert-info">
+                        <ul>
+                            <li>No soy muy interesante, pero puedes seguirme en:</li>
+                        </ul>
+                        <div class="text-center">
+                            <h3>
+                                <a href="https://www.instagram.com/dfbastidas/" target="_blank"><i class="fa-brands fa-instagram"></i></a> |
+                                <a href="https://www.youtube.com/channel/UC3OX29cmNHkj8qp6JUlNpgA" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {#    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>#}
+    {#    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>#}
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script>
+        $('.custom-file-input').on('change', function (event) {
+            var inputFile = event.currentTarget;
+            $(inputFile).parent()
+                .find('.custom-file-label')
+                .html(inputFile.files[0].name);
+        });
+    </script>
+{% endblock %}
+

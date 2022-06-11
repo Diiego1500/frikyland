@@ -27,7 +27,7 @@ class PostController extends AbstractController
     }
 
 
-    #[Route('/', name: 'app_post')]
+    #[Route('/', name: 'index')]
     public function index(Request $request, SluggerInterface $slugger): Response
     {
         $post = new Post();
