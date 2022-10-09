@@ -1,21 +1,24 @@
 version: '3'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
+  db_app:
+    container_name: db_app
+    image: mysql:5.7
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: frikyland
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
-
+      - frikyland_db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  web_app:
+    depends_on:
+      - db_app
+    container_name: frikyland_app
+    build: ./docker_files/
+    volumes:
+      - .:/var/www/html/frikyland
+    ports:
+      - "80:80"
 volumes:
-###> doctrine/doctrine-bundle ###
-  db-data:
-###< doctrine/doctrine-bundle ###
+  frikyland_db:
