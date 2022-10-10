@@ -24,6 +24,6 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 COPY 000-default.conf /etc/apache2/sites-available
-WORKDIR /var/www/html
+WORKDIR /var/www/html/frikyland
 
 CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
